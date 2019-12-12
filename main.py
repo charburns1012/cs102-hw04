@@ -10,28 +10,26 @@ output_path = sys.argv[2]
 img = Image.open(input_path)
 width, height = img.size
 
-# Create a new, all-white image that's the same size as the original
 new_img = Image.new("RGB", (width, height), "white")
 
-# TODO: Replace this with your own filter!
-# Median pixel filter, taken from https://note.nkmk.me/en/python-opencv-pillow-image-size
-members = [0] * 9
-for i in range(2, width // 2):
-    for j in range(1, height - 1):
-        members[0] = img.getpixel((i - 1, j - 1))
-        members[1] = img.getpixel((i - 1, j))
-        members[2] = img.getpixel((i - 1, j + 1))
-        members[3] = img.getpixel((i, j - 1))
-        members[4] = img.getpixel((i, j))
-        members[5] = img.getpixel((i, j + 1))
-        members[6] = img.getpixel((i + 1, j - 1))
-        members[7] = img.getpixel((i + 1, j))
-        members[8] = img.getpixel((i + 1, j + 1))
-        new_img.putpixel((i, j), (random.choice(members)))
+  # Transform to pink
+for i in range(width):
+    for j in range(height):
+      # Get Pixels
+      r, g, b = img.getpixel((i, j))
 
-for i in range(width // 2, width - 1):
-    for j in range(1, height - 1):
-        r, g, b = img.getpixel((i, j))
-        new_img.putpixel((i, j), (0, g, b))
 
+      # Transform to pink
+      if r < 100:
+        r = r + 125
+      if 100 < r < 150:
+        r = r + 75
+      if 150 < r < 200:
+        r = r + 25
+      if g > 125:
+        g = g - 125
+      if b > 125:
+        b = b - 125
+
+      new_img.putpixel((i, j), (r, g, b))
 new_img.save(output_path)
